@@ -9,6 +9,9 @@ import { CorrelationContextManager } from "../AutoCollection/CorrelationContextM
  */
 class EnvelopeFactory {
 
+    private static lastEventTime: string;
+    private static eventOrdinal: number = 0;
+
     /**
      * Creates envelope ready to be sent by Channel
      * @param telemetry Telemetry data
@@ -80,7 +83,23 @@ class EnvelopeFactory {
             "." +
             data.baseType.substr(0, data.baseType.length - 4);
         envelope.tags = this.getTags(context, telemetry.tagOverrides);
-        envelope.time = (new Date()).toISOString();
+
+        var timestamp = (new Date()).toISOString();
+        if (this.lastEventTime !== envelope.time) {
+            this.eventOrdinal = 0;
+            this.lastEventTime = envelope.time;
+        }
+        var myOrdinalStr = String(this.eventOrdinal);
+        this.eventOrdinal = this.eventOrdinal + 1;
+
+        var numToPad = 6 - myOrdinalStr.length;
+        var appendStamp = myOrdinalStr;
+        for (var i = 0; i < numToPad; i++) {
+            appendStamp = "0" + appendStamp;
+        }
+        timestamp = timestamp.replace(new RegExp("Z$", "g"), appendStamp + "Z");
+        envelope.time = timestamp;
+
         envelope.ver = 1;
         envelope.sampleRate = config ? config.samplingPercentage : 100;
 
