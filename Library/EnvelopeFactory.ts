@@ -85,9 +85,9 @@ class EnvelopeFactory {
         envelope.tags = this.getTags(context, telemetry.tagOverrides);
 
         var timestamp = (new Date()).toISOString();
-        if (this.lastEventTime !== envelope.time) {
+        if (this.lastEventTime !== timestamp) {
             this.eventOrdinal = 0;
-            this.lastEventTime = envelope.time;
+            this.lastEventTime = timestamp;
         }
         var myOrdinalStr = String(this.eventOrdinal);
         this.eventOrdinal = this.eventOrdinal + 1;
