@@ -92,7 +92,7 @@ class EnvelopeFactory {
         var myOrdinalStr = String(this.eventOrdinal);
         this.eventOrdinal = this.eventOrdinal + 1;
 
-        var numToPad = 6 - myOrdinalStr.length;
+        var numToPad = 1 - myOrdinalStr.length;
         var appendStamp = myOrdinalStr;
         for (var i = 0; i < numToPad; i++) {
             appendStamp = "0" + appendStamp;
